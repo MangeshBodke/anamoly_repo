@@ -1,0 +1,14 @@
+click
+colorama
+Flask
+itsdangerous
+pandas
+Jinja2
+MarkupSafe
+numpy
+scipy
+Werkzeug
+joblib
+sklearn
+seaborn
+pyplt
