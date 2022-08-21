@@ -1,4 +1,5 @@
 import pickle
+from tkinter import OFF
 
 from flask import Flask, request, app, jsonify, url_for, render_template
 import numpy as np
@@ -34,36 +35,37 @@ outliers = {'Family_Hist_2', 'Family_Hist_3', 'Family_Hist_4', 'Family_Hist_5', 
             'Medical_History_1', 'Medical_History_10', 'Medical_History_15', 'Medical_History_24',
             'Medical_History_32', 'Product_Info_2_code', 'Product_Info_3', 'Product_Info_5'}
 
+data = pd.read_csv('test.csv')
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+le.fit(data['Product_Info_2'])
+data['Product_Info_2_code'] = le.transform(data['Product_Info_2'])
+
+data.drop(drop_columns, axis=1, inplace=True)
+# new_data = data[selected_features]
+# print(new_data)
+
+anomaly = outliers.intersection(selected_features)
+# print(anomaly)
+
+df_outlier = data[~data['Family_Hist_4'].isna()].copy()
+# print(df_outlier)
+
+isf = pickle.load(open('IsolationForest.pkl', 'rb'))
+
+df_outlier['scores'] = isf.decision_function(df_outlier[['Family_Hist_4']])
+df_outlier['anomaly'] = isf.predict(df_outlier[['Family_Hist_4']])
+
+
 @app.route('/')
+@app.route('/index')
 def anamoly():
-
-    data = pd.read_csv('test.csv')
-    from sklearn.preprocessing import LabelEncoder
-    le = LabelEncoder()
-    le.fit(data['Product_Info_2'])
-    data['Product_Info_2_code'] = le.transform(data['Product_Info_2'])
-
-    data.drop(drop_columns, axis=1, inplace=True)
-    # new_data = data[selected_features]
-    # print(new_data)
-
-    anomaly = outliers.intersection(selected_features)
-    # print(anomaly)
-
-    df_outlier = data[~data['Family_Hist_4'].isna()].copy()
-    # print(df_outlier)
-
-    isf = pickle.load(open('IsolationForest.pkl', 'rb'))
-
-    df_outlier['scores'] = isf.decision_function(df_outlier[['Family_Hist_4']])
-    df_outlier['anomaly'] = isf.predict(df_outlier[['Family_Hist_4']])
-
     fig, ax = plt.subplots(ncols=2, figsize=(12, 6))
     sns.countplot(ax=ax[0], x='anomaly', data=df_outlier)
     sns.scatterplot(ax=ax[1], y='scores', x='Family_Hist_4', hue='anomaly', data=df_outlier)
     plt.show()
-    fig.savefig('Anamoly_detection.png')
-    return 'Anamoly Detected'
+    fig.savefig('anamoly_image\image\Anamoly_detection.png')
+    return render_template('index.html', user_image = 'Anamoly_detection.png')
 
 if __name__=="__main__":
-    app.run(host='0.0.0.0',port='5000', debug=True)
+    app.run(debug=OFF)
