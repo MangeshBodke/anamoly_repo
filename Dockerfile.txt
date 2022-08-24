@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 RUN pip install Flask gunicorn
 
 EXPOSE 8080
-ENTRYPOINT [ "run, "app.py", "flask", "--server.port=8080", "--server.address=0.0.0.0"]
+ENTRYPOINT [ "run", "app.py", "flask", "--server.port=8080", "--server.address=0.0.0.0"]
