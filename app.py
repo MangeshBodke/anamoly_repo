@@ -1,11 +1,15 @@
+import importlib
+from tkinter import OFF
 import pickle
 from tkinter import OFF
-
-from flask import Flask, request, app, jsonify, url_for, render_template
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib import figure
+import mpld3
+from flask import Flask, app, url_for, render_template
+
 
 app = Flask(__name__)
 
@@ -58,14 +62,20 @@ df_outlier['anomaly'] = isf.predict(df_outlier[['Family_Hist_4']])
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/anamoly')
 def anamoly():
     fig, ax = plt.subplots(ncols=2, figsize=(12, 6))
     sns.countplot(ax=ax[0], x='anomaly', data=df_outlier)
     sns.scatterplot(ax=ax[1], y='scores', x='Family_Hist_4', hue='anomaly', data=df_outlier)
-    plt.show()
-    fig.savefig('anamoly_image\image\Anamoly_detection.png')
-    return render_template('index.html', user_image = 'Anamoly_detection.png')
+    # plt.show()
+    # fig.savefig('anamoly_image\image\Anamoly_detection.png')
+    mpld3.show()
+    mpld3.save_html(fig, 'clustering.html')
+    return mpld3.fig_to_html(fig)
 
-if __name__=="__main__":
-    app.run(debug=OFF)
+if __name__ == "__main__":
+    import random, threading, webbrowser
+    port = 5000 + random.randint(0, 999)
+    url = "http://127.0.0.1:{0}".format(port)
+    threading.Timer(1.25, lambda: webbrowser.open(url) ).start()
+    app.run(port=port, debug=False)
