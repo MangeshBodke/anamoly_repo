@@ -8,3 +8,6 @@ Werkzeug
 sklearn
 seaborn
 pyplt
+mpld3
+matplotlib
+pickle
