@@ -1,3 +1,4 @@
+pickle
 click
 Flask
 pandas
@@ -10,4 +11,3 @@ seaborn
 pyplt
 mpld3
 matplotlib
-pickle
