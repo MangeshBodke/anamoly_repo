@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.7.9-slim
 
 COPY ./requirements.txt /app/requirements.txt
 COPY . /app
@@ -7,6 +7,5 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 RUN pip install Flask gunicorn
 
-EXPOSE $port
-ENTRYPOINT [ "Python", "-m", "flask", "run"]
-CMD [ "app.py" ]
+EXPOSE 8080
+ENTRYPOINT [ "run, "app.py", "python", "flask", "--server.port=8080", "--server.address=0.0.0.0"]
