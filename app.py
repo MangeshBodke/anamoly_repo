@@ -69,13 +69,19 @@ def anamoly():
     sns.scatterplot(ax=ax[1], y='scores', x='Family_Hist_4', hue='anomaly', data=df_outlier)
     # plt.show()
     # fig.savefig('anamoly_image\image\Anamoly_detection.png')
-    mpld3.show()
+    mpld3.show(fig)
     mpld3.save_html(fig, 'clustering.html')
-    return mpld3.fig_to_html(fig)
+    return mpld3.fig_to_html(fig, mpld3_url='127.0.0.1:8080')
+
+# if __name__ == "__main__":
+#     # import random, threading, webbrowser
+#     # port = 5000 + random.randint(0, 999)
+#     # url = "http://127.0.0.1:{0}".format(port)
+#     # threading.Timer(1.25, lambda: webbrowser.open(url) ).start()
 
 if __name__ == "__main__":
     import random, threading, webbrowser
-    port = 5000 + random.randint(0, 999)
-    url = "http://127.0.0.1:{0}".format(port)
-    threading.Timer(1.25, lambda: webbrowser.open(url) ).start()
-    app.run(port=port, debug=False)
+    # port = 5000 + random.randint(0, 999)
+    # url = "http://127.0.0.1:{0}".format(port)
+    # threading.Timer(1.25, lambda: webbrowser.open(url) ).start()
+    app.run(host='0.0.0.0', port=8080, debug=True, use_reloader=False)
