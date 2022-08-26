@@ -1,5 +1,5 @@
 FROM python:3.9.2
-ADD main.py .
+ADD app.py .
 COPY . /app
 WORKDIR /app
 
